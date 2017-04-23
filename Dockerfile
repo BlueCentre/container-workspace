@@ -7,20 +7,23 @@ RUN dnf -y install git \
                    sudo \
                    && dnf clean all
 
+# environment
+ENV PATH /home/gcloud/google-cloud-sdk/bin:$PATH \
+    WORKSPACE_USER gcloud \
+    HOME /home/gcloud \
+    CLOUDSDK_PYTHON /usr/bin/python
+
 # add an gcloud user and allow it to sudo
 RUN useradd -m gcloud && echo 'gcloud ALL=NOPASSWD: ALL' > /etc/sudoers.d/gcloud
 
 # switch to gcloud user
 USER gcloud
-ENV PATH /home/gcloud/google-cloud-sdk/bin:$PATH \
-    HOME /home/gcloud \
-    CLOUDSDK_PYTHON /usr/bin/python
 
 # install gcloud
 RUN curl -o /tmp/google-cloud-sdk.tar.gz \
     https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
-    && tar -C /home/gcloud -zxf /tmp/google-cloud-sdk.tar.gz \
-    && /home/gcloud/google-cloud-sdk/install.sh \
+    && tar -C /opt -zxf /tmp/google-cloud-sdk.tar.gz \
+    && /opt/google-cloud-sdk/install.sh \
         --usage-reporting false \
         --bash-completion true \
         --rc-path /home/gcloud/.bashrc \
