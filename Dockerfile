@@ -8,16 +8,16 @@ RUN dnf -y install git \
                    && dnf clean all
 
 # environment
-ENV PATH /home/gcloud/google-cloud-sdk/bin:$PATH \
-    WORKSPACE_USER gcloud \
-    HOME /home/gcloud \
+ENV WORKSPACE_USER ${WORKSPACE_USER:-gcloud} \
+    HOME /home/${WORKSPACE_USER} \
+    PATH /opt/google-cloud-sdk/bin:${PATH} \
     CLOUDSDK_PYTHON /usr/bin/python
 
 # add an gcloud user and allow it to sudo
-RUN useradd -m gcloud && echo 'gcloud ALL=NOPASSWD: ALL' > /etc/sudoers.d/gcloud
+RUN useradd -m ${WORKSPACE_USER} && echo '${WORKSPACE_USER} ALL=NOPASSWD: ALL' > /etc/sudoers.d/${WORKSPACE_USER}
 
-# switch to gcloud user
-USER gcloud
+# switch to user
+USER ${WORKSPACE_USER}
 
 # install gcloud
 RUN curl -o /tmp/google-cloud-sdk.tar.gz \
@@ -26,11 +26,11 @@ RUN curl -o /tmp/google-cloud-sdk.tar.gz \
     && /opt/google-cloud-sdk/install.sh \
         --usage-reporting false \
         --bash-completion true \
-        --rc-path /home/gcloud/.bashrc \
+        --rc-path /home/${WORKSPACE_USER}/.bashrc \
         --path-update true \
     && rm -rf /tmp/google-cloud-sdk.tar.gz
 
-VOLUME /home/gcloud /data
+VOLUME /home/${WORKSPACE_USER} /data
 #VOLUME ['/home/gcloud/.config/gcloud']
 
 CMD /bin/bash
