@@ -12,9 +12,9 @@ RUN useradd -m gcloud && echo 'gcloud ALL=NOPASSWD: ALL' > /etc/sudoers.d/gcloud
 
 # switch to gcloud user
 USER gcloud
-ENV PATH /home/gcloud/google-cloud-sdk/bin:$PATH
-ENV HOME /home/gcloud
-ENV CLOUDSDK_PYTHON /usr/bin/python
+ENV PATH /home/gcloud/google-cloud-sdk/bin:$PATH \
+    HOME /home/gcloud \
+    CLOUDSDK_PYTHON /usr/bin/python
 
 # install gcloud
 RUN curl -o /tmp/google-cloud-sdk.tar.gz \
