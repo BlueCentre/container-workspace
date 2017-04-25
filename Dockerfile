@@ -15,9 +15,9 @@ RUN useradd -m luser && echo 'luser ALL=NOPASSWD: ALL' > /etc/sudoers.d/luser
 
 # switch to user
 USER luser
-ENV HOME /home/luser \
-    PATH /home/luser/google-cloud-sdk/bin:${PATH} \
-    CLOUDSDK_PYTHON /usr/bin/python
+ENV HOME /home/luser
+ENV PATH /home/luser/google-cloud-sdk/bin:${PATH}
+ENV CLOUDSDK_PYTHON /usr/bin/python
 
 # install gcloud
 RUN curl -o /tmp/google-cloud-sdk.tar.gz \
