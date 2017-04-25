@@ -8,16 +8,16 @@ RUN dnf -y install git \
                    && dnf clean all
 
 # environment
-ENV WORKSPACE_USER ${WORKSPACE_USER:-gcloud} \
-    HOME /home/luser \
-    PATH /opt/google-cloud-sdk/bin:${PATH} \
-    CLOUDSDK_PYTHON /usr/bin/python
+ENV WORKSPACE_USER ${WORKSPACE_USER:-gcloud}
 
 # add an gcloud user and allow it to sudo
 RUN useradd -m luser && echo 'luser ALL=NOPASSWD: ALL' > /etc/sudoers.d/luser
 
 # switch to user
 USER luser
+ENV HOME /home/luser \
+    PATH /home/luser/google-cloud-sdk/bin:${PATH} \
+    CLOUDSDK_PYTHON /usr/bin/python
 
 # install gcloud
 RUN curl -o /tmp/google-cloud-sdk.tar.gz \
