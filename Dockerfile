@@ -22,7 +22,7 @@ USER luser
 # install gcloud
 RUN curl -o /tmp/google-cloud-sdk.tar.gz \
     https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
-    && tar -C /opt -zxf /tmp/google-cloud-sdk.tar.gz \
+    && tar -C /home/luser-zxf /tmp/google-cloud-sdk.tar.gz \
     && /home/luser/google-cloud-sdk/install.sh \
         --usage-reporting false \
         --bash-completion true \
