@@ -9,15 +9,15 @@ RUN dnf -y install git \
 
 # environment
 ENV WORKSPACE_USER ${WORKSPACE_USER:-gcloud} \
-    HOME /home/${WORKSPACE_USER} \
+    HOME /home/luser \
     PATH /opt/google-cloud-sdk/bin:${PATH} \
     CLOUDSDK_PYTHON /usr/bin/python
 
 # add an gcloud user and allow it to sudo
-RUN useradd -m ${WORKSPACE_USER} && echo '${WORKSPACE_USER} ALL=NOPASSWD: ALL' > /etc/sudoers.d/${WORKSPACE_USER}
+RUN useradd -m luser && echo 'luser ALL=NOPASSWD: ALL' > /etc/sudoers.d/luser
 
 # switch to user
-USER ${WORKSPACE_USER}
+USER luser
 
 # install gcloud
 RUN curl -o /tmp/google-cloud-sdk.tar.gz \
@@ -26,18 +26,23 @@ RUN curl -o /tmp/google-cloud-sdk.tar.gz \
     && /opt/google-cloud-sdk/install.sh \
         --usage-reporting false \
         --bash-completion true \
-        --rc-path /home/${WORKSPACE_USER}/.bashrc \
+        --rc-path /home/luser/.bashrc \
         --path-update true \
     && rm -rf /tmp/google-cloud-sdk.tar.gz
 
-VOLUME /home/${WORKSPACE_USER} /data
+VOLUME /home/luser /data
 #VOLUME ['/home/gcloud/.config/gcloud']
 
 CMD /bin/bash
 
 #build image:
-# 'docker build -t gcloud .'
-#create storage container:
-# 'docker create -v /home/gcloud/.config/gcloud --name gcloud-config ipv1337/docker-gcloud /bin/true'
-#run container with storage:
-# 'docker run --volumes-from gcloud-config --name gcloud -it ipv1337/docker-gcloud'
+# 'docker build -t fedora-workspace .'
+
+#[host storage option]
+# 'docker run --name myworkspace -v c:/Users/<username>/Docker/data:/data -v c:/Users/<username>/Docker/home:/home/luser -it ipv1337/fedora-workspace
+
+#[storage container option]
+#create storage container (optional):
+# 'docker create -v /home/luser/.config/gcloud --name gcloud-config ipv1337/fedora-workspace /bin/true'
+#run container with storage (optional):
+# 'docker run --volumes-from gcloud-config --name myworkspace -it ipv1337/fedora-workspace'
