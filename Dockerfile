@@ -23,7 +23,7 @@ USER luser
 RUN curl -o /tmp/google-cloud-sdk.tar.gz \
     https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
     && tar -C /opt -zxf /tmp/google-cloud-sdk.tar.gz \
-    && /opt/google-cloud-sdk/install.sh \
+    && /home/luser/google-cloud-sdk/install.sh \
         --usage-reporting false \
         --bash-completion true \
         --rc-path /home/luser/.bashrc \
