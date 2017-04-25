@@ -42,7 +42,7 @@ CMD /bin/bash
 # 'docker run --name myworkspace -v c:/Users/<username>/Docker/data:/data -v c:/Users/<username>/Docker/home:/home/luser -it ipv1337/fedora-workspace
 
 #[storage container option]
-#create storage container (optional):
+#create storage container:
 # 'docker create -v /home/luser/.config/gcloud --name gcloud-config ipv1337/fedora-workspace /bin/true'
-#run container with storage (optional):
+#run container with storage:
 # 'docker run --volumes-from gcloud-config --name myworkspace -it ipv1337/fedora-workspace'
