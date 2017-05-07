@@ -2,8 +2,7 @@ FROM fedora:latest
 MAINTAINER James H Nguyen <james@callfire.com>
 
 RUN dnf -y update && dnf clean all
-RUN dnf -y install hostname \
-                   git \
+RUN dnf -y install git \
                    ansible \
                    sudo \
                    && dnf clean all
