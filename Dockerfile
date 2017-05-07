@@ -3,7 +3,7 @@ MAINTAINER James H Nguyen <james@callfire.com>
 
 RUN dnf -y update && dnf clean all
 RUN dnf -y install git \
-                   python \
+                   ansible \
                    sudo \
                    && dnf clean all
 
