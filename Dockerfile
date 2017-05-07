@@ -35,13 +35,15 @@ VOLUME /data /home/luser/.config/gcloud /home/luser/.ssh
 CMD /bin/bash
 
 #build image:
-# 'docker build -t fedora-workspace .'
+# $ docker build -t fedora-workspace .
 
-#[host storage option]
-# 'docker run --name myworkspace -v c:/Users/<username>/Docker/data:/data -v c:/Users/<username>/Docker/home:/home/luser -it ipv1337/fedora-workspace
+#example usage:
+# $ docker create -v /data --name data-volume fedora /bin/true
+# $ docker create -v /home/luser/.config/gcloud --name gcloud-config-volume fedora /bin/true
+# $ docker run --volumes-from data-volume --volumes-from gcloud-config-volume --name workspace -it ipv1337/fedora-workspace
+# or
+# $ docker run --volumes-from data-volume --volumes-from gcloud-config-volume -v c:/Users/<username>/Docker/data/Gitlab/home/.ssh:/home/luser/.ssh --name workspace -it ipv1337/fedora-workspace
 
-#[storage container option]
-#create storage container:
-# 'docker create -v /home/luser/.config/gcloud --name gcloud-config ipv1337/fedora-workspace /bin/true'
-#run container with storage:
-# 'docker run --volumes-from gcloud-config --name myworkspace -it ipv1337/fedora-workspace'
+#relaunch:
+# $ docker start workspace
+# $ docker attach workspace
