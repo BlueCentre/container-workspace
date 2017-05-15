@@ -48,5 +48,8 @@ CMD /bin/bash
 #relaunch:
 # $ docker start workspace
 # $ docker attach workspace
+#backup volume:
+# $ docker run --rm --volumes-from data-volume -v c:/Users/James/Downloads:/backup fedora tar cvf /backup/data-volume.tar /data
+# $ docker run --rm --volumes-from gcloud-config-volume -v c:/Users/James/Downloads:/backup fedora tar cvf /backup/gcloud-config-volume.tar /home/luser/.config/gcloud
 #find unused volumes:
 # $ docker volume ls -f dangling=true
