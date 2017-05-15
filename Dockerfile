@@ -40,11 +40,11 @@ CMD /bin/bash
 #example usage:
 # $ docker create -v /data --name data-volume fedora /bin/true
 # $ docker create -v /home/luser/.config/gcloud --name gcloud-config-volume fedora /bin/true
-# $ docker run --volumes-from data-volume --volumes-from gcloud-config-volume --name workspace -it ipv1337/fedora-workspace
-# or
-# $ docker run --volumes-from data-volume --volumes-from gcloud-config-volume -v c:/Users/<username>/Docker/data/Gitlab/home/.ssh:/home/luser/.ssh --name workspace -it ipv1337/fedora-workspace
-# or
-# $ docker run -v mydatavol:/data -v mygcloudconfigvol:/home/luser/.config/gcloud -v c:/Users/James/Docker/data/Gitlab/home/.ssh:/home/luser/.ssh --name myworkspace -it ipv1337/fedora-workspace
+# $ docker run --volumes-from data-volume --volumes-from gcloud-config-volume [-v c:/Users/<username>/Docker/data/Gitlab/home/.ssh:/home/luser/.ssh] --name workspace -it ipv1337/fedora-workspace
+#volume usage:
+# $ docker create -d convoy --opt o=size5GB --name mydatavol
+# $ docker create -d convoy --opt o=size100MB --name mygcloudconfigvol
+# $ docker run -v mydatavol:/data -v mygcloudconfigvol:/home/luser/.config/gcloud [-v c:/Users/James/Docker/data/Gitlab/home/.ssh:/home/luser/.ssh] --name myworkspace -it ipv1337/fedora-workspace
 #relaunch:
 # $ docker start workspace
 # $ docker attach workspace
