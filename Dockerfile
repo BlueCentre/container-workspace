@@ -43,7 +43,8 @@ CMD /bin/bash
 # $ docker run --volumes-from data-volume --volumes-from gcloud-config-volume --name workspace -it ipv1337/fedora-workspace
 # or
 # $ docker run --volumes-from data-volume --volumes-from gcloud-config-volume -v c:/Users/<username>/Docker/data/Gitlab/home/.ssh:/home/luser/.ssh --name workspace -it ipv1337/fedora-workspace
-
+# or
+# $ docker run -v mydatavol:/data -v mygcloudconfigvol:/home/luser/.config/gcloud -v c:/Users/James/Docker/data/Gitlab/home/.ssh:/home/luser/.ssh --name myworkspace -it ipv1337/fedora-workspace
 #relaunch:
 # $ docker start workspace
 # $ docker attach workspace
