@@ -48,3 +48,5 @@ CMD /bin/bash
 #relaunch:
 # $ docker start workspace
 # $ docker attach workspace
+#find unused volumes:
+# $ docker volume ls -f dangling=true
