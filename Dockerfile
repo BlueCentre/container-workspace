@@ -53,6 +53,6 @@ CMD /bin/bash
 # $ docker run --rm --volumes-from gcloud-config-volume -v c:/Users/James/Downloads:/backup fedora tar cvf /backup/gcloud-config-volume.tar /home/luser/.config/gcloud
 #restore volume:
 # $ docker run --rm --volumes-from myworkspace -v $(pwd):/backup fedora bash -c "cd /data && tar xvf /backup/data-volume.tar --strip 1"
-# $ docker run --rm --volumes-from myworkspace -v $(pwd):/backup fedora bash -c "cd /home/luser/.config/gcloud && tar xvf /backup/gcloud-config-volume.tar --strip 1"
+# $ docker run --rm --volumes-from myworkspace -v $(pwd):/backup fedora bash -c "cd /home && tar xvf /backup/gcloud-config-volume.tar --strip 1"
 #find unused volumes:
 # $ docker volume ls -f dangling=true
