@@ -1,0 +1,12 @@
+version: '3'
+services:
+  workspace:
+    image: "ipv1337/fedora-workspace"
+    volumes:
+     - C:/Users/James/Docker/data/Gitlab/home/.ssh:/home/luser/.ssh
+     - datavol:/data
+     - gcloudvol:/home/luser/.config/gcloud
+    #command: /bin/bash
+volumes:
+  datavol:
+  gcloudvol:
