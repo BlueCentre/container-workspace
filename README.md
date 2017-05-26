@@ -18,10 +18,8 @@ $ docker run --volumes-from data-volume --volumes-from gcloud-config-volume [-v 
 
 # relaunch:
 ```
-$ docker-compose run workspace /bin/bash
-```
+$ docker-compose run workspace /bin/bash (creates a new container)
 or
-```
 $ docker start workspace
 $ docker attach workspace
 ```
