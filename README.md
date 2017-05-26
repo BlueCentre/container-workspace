@@ -18,12 +18,12 @@ $ docker run --volumes-from data-volume --volumes-from gcloud-config-volume [-v 
 
 # relaunch:
 ```
-$ docker start workspace
-$ docker attach workspace
+$ docker-compose run workspace /bin/bash
 ```
 or
 ```
-$ docker-compose run workspace /bin/bash
+$ docker start workspace
+$ docker attach workspace
 ```
 
 # backup volume:
