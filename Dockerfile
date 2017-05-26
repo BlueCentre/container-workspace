@@ -46,6 +46,8 @@ CMD /bin/bash
 # $ docker create -v /home/luser/.config/gcloud --name gcloud-config-volume fedora /bin/true
 # $ docker run --volumes-from data-volume --volumes-from gcloud-config-volume [-v c:/Users/<username>/Docker/data/Gitlab/home/.ssh:/home/luser/.ssh] --name workspace -it ipv1337/fedora-workspace
 #relaunch:
+# $ docker-compose run workspace /bin/bash (creates new container)
+# or
 # $ docker start workspace
 # $ docker attach workspace
 #backup volume:
@@ -56,5 +58,3 @@ CMD /bin/bash
 # $ docker run --rm --volumes-from myworkspace -v $(pwd):/backup fedora bash -c "cd /home && tar xvf /backup/gcloud-config-volume.tar --strip 1"
 #find unused volumes:
 # $ docker volume ls -f dangling=true
-#run workspace:
-# $ docker-compose run workspace /bin/bash
