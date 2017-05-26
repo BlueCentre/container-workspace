@@ -39,8 +39,3 @@ $ docker run --rm --volumes-from myworkspace -v C:/Users/James/Downloads:/backup
 ```
 $ docker volume ls -f dangling=true
 ```
-
-# run workspace:
-```
-$ docker-compose run workspace /bin/bash
-```
