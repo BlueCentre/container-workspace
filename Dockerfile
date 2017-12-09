@@ -1,5 +1,5 @@
 FROM fedora:latest
-MAINTAINER James H Nguyen <james@callfire.com>
+MAINTAINER James H Nguyen <james.nguyen@gmail.com>
 
 RUN dnf -y update && dnf clean all
 RUN dnf -y install git \
