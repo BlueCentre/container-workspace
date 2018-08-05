@@ -30,7 +30,8 @@ RUN curl -o /tmp/google-cloud-sdk.tar.gz \
         --path-update true \
     && rm -rf /tmp/google-cloud-sdk.tar.gz
 
-VOLUME /data /home/luser/.config/gcloud /home/luser/.ssh
+#VOLUME /data /home/luser/.config/gcloud /home/luser/.ssh
+VOLUME /data /home/luser/.config/gcloud
 
 CMD /bin/bash
 
