@@ -29,6 +29,8 @@ RUN curl -o /tmp/google-cloud-sdk.tar.gz \
         --rc-path /home/luser/.bashrc \
         --path-update true \
     && rm -rf /tmp/google-cloud-sdk.tar.gz
+# alias to bootstrap workspace
+COPY bootstrap.sh /etc/profile.d/
 
 #VOLUME /data /home/luser/.config/gcloud /home/luser/.ssh
 VOLUME /data /home/luser/.config/gcloud
