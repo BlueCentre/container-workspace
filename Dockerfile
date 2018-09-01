@@ -1,4 +1,5 @@
-FROM fedora:latest
+#FROM fedora:latest
+FROM registry.fedoraproject.org/fedora-minimal:latest
 MAINTAINER James H Nguyen <james.nguyen@gmail.com>
 
 RUN dnf -y update && dnf clean all
