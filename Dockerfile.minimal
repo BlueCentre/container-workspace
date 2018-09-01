@@ -3,7 +3,8 @@ FROM registry.fedoraproject.org/fedora-minimal:latest
 MAINTAINER James H Nguyen <james.nguyen@gmail.com>
 
 RUN microdnf -y update && microdnf clean all
-RUN microdnf -y install git \
+RUN microdnf -y install tar \
+                   git \
                    ansible \
                    sudo \
                    && microdnf clean all
