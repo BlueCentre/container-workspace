@@ -1,1 +1,1 @@
-Dockerfile.minimal
+Dockerfile.full
