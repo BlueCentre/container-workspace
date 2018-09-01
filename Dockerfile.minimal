@@ -1,3 +1,4 @@
+# https://fedoraproject.org/wiki/Changes/ContainerMinimalImage
 FROM registry.fedoraproject.org/fedora-minimal:latest
 MAINTAINER James H Nguyen <james.nguyen@gmail.com>
 
