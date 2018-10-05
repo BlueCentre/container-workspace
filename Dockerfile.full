@@ -1,16 +1,17 @@
 FROM fedora:latest
 MAINTAINER James H Nguyen <james.nguyen@gmail.com>
 
+# update and install minimal packages
 RUN dnf -y update && dnf clean all
 RUN dnf -y install git \
                    ansible \
                    sudo \
                    && dnf clean all
 
-# environment
-ENV WORKSPACE_USER ${WORKSPACE_USER:-gcloud}
+# environment (DEPRECATED)
+#ENV WORKSPACE_USER ${WORKSPACE_USER:-gcloud}
 
-# add an gcloud user and allow it to sudo
+# add a local shell user and allow it to sudo without password
 RUN useradd -m luser && echo 'luser ALL=NOPASSWD: ALL' > /etc/sudoers.d/luser
 
 # switch to user
@@ -29,7 +30,8 @@ RUN curl -o /tmp/google-cloud-sdk.tar.gz \
         --rc-path /home/luser/.bashrc \
         --path-update true \
     && rm -rf /tmp/google-cloud-sdk.tar.gz
-# alias to bootstrap workspace
+
+# custom aliases to bootstrap workspace
 COPY bootstrap.sh /etc/profile.d/
 
 #VOLUME /data /home/luser/.config/gcloud /home/luser/.ssh
