@@ -3,7 +3,8 @@ MAINTAINER James H Nguyen <james.nguyen@gmail.com>
 
 # update and install minimal packages
 RUN dnf -y update && dnf clean all
-RUN dnf -y install git \
+RUN dnf -y install python3 \
+                   git \
                    ansible \
                    sudo \
                    && dnf clean all
