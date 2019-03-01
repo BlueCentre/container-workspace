@@ -3,7 +3,8 @@ MAINTAINER James H Nguyen <james.nguyen@gmail.com>
 
 # update and install minimal packages
 RUN dnf -y update && dnf clean all
-RUN dnf -y install git \
+RUN dnf -y install python2 \
+                   git \
                    ansible \
                    sudo \
                    && dnf clean all
@@ -18,7 +19,7 @@ RUN useradd -m luser && echo 'luser ALL=NOPASSWD: ALL' > /etc/sudoers.d/luser
 USER luser
 ENV HOME /home/luser
 ENV PATH /home/luser/google-cloud-sdk/bin:${PATH}
-ENV CLOUDSDK_PYTHON /usr/bin/python3
+ENV CLOUDSDK_PYTHON /usr/bin/python
 
 # install gcloud
 RUN curl --silent -o /tmp/google-cloud-sdk.tar.gz \
