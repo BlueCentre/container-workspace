@@ -38,4 +38,5 @@ $ docker-compose run workspace /bin/bash (creates a new container)
 or
 $ docker start workspace
 $ docker attach workspace
+$ kubectl exec -it workspace /bin/bash
 ```
