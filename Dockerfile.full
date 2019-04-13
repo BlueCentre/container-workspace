@@ -7,13 +7,21 @@ RUN dnf -y install python2 \
                    git \
                    ansible \
                    sudo \
+#                   npm \
+#                   libxkbfile-devel \
+#                   libsecret-devel \
+                   dumb-init \
                    && dnf clean all
 
 # environment (DEPRECATED)
 #ENV WORKSPACE_USER ${WORKSPACE_USER:-gcloud}
 
+# ensure latest yarn
+#RUN npm install -g yarn
+
 # add a local shell user and allow it to sudo without password
-RUN useradd -m luser && echo 'luser ALL=NOPASSWD: ALL' > /etc/sudoers.d/luser
+RUN useradd -m luser && \
+    echo 'luser ALL=NOPASSWD: ALL' > /etc/sudoers.d/luser
 
 # switch to user
 USER luser
@@ -35,7 +43,16 @@ RUN curl --silent -o /tmp/google-cloud-sdk.tar.gz \
 # custom aliases to bootstrap workspace
 COPY bootstrap.sh /etc/profile.d/
 
+# todo: download code-server from somewhere
+# https://github.com/codercom/code-server/blob/master/Dockerfile
+COPY code-server /usr/local/bin/
+# We create first instead of just using WORKDIR as when WORKDIR creates, the user is root.
+RUN mkdir -p /home/luser/project
+WORKDIR /home/luser/project
+EXPOSE 8443
+
 #VOLUME /data /home/luser/.config/gcloud /home/luser/.ssh
 VOLUME /data /home/luser/.config/gcloud
 
-CMD sleep infinity
+#CMD sleep infinity
+ENTRYPOINT ["dumb-init", "code-server"]
