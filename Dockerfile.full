@@ -7,19 +7,14 @@ RUN dnf -y install python2 \
                    git \
                    ansible \
                    sudo \
-#                   npm \
-#                   libxkbfile-devel \
-#                   libsecret-devel \
                    dumb-init \
                    net-tools \
                    procps \
                    && dnf clean all
 
-# environment (DEPRECATED)
-#ENV WORKSPACE_USER ${WORKSPACE_USER:-gcloud}
 
-# ensure latest yarn
-#RUN npm install -g yarn
+
+
 
 # add a local shell user and allow it to sudo without password
 RUN useradd -m luser && \
@@ -30,6 +25,13 @@ USER luser
 ENV HOME /home/luser
 ENV PATH /home/luser/google-cloud-sdk/bin:${PATH}
 ENV CLOUDSDK_PYTHON /usr/bin/python
+
+# custom aliases to bootstrap workspace
+COPY bootstrap.sh /etc/profile.d/
+
+
+
+
 
 # install gcloud
 RUN curl --silent -o /tmp/google-cloud-sdk.tar.gz \
@@ -42,8 +44,10 @@ RUN curl --silent -o /tmp/google-cloud-sdk.tar.gz \
         --path-update true \
     && rm -rf /tmp/google-cloud-sdk.tar.gz
 
-# custom aliases to bootstrap workspace
-COPY bootstrap.sh /etc/profile.d/
+
+
+
+
 
 # todo: download code-server from somewhere
 # https://github.com/codercom/code-server/blob/master/Dockerfile
@@ -52,6 +56,10 @@ COPY code-server /usr/local/bin/
 RUN mkdir -p /home/luser/project
 WORKDIR /home/luser/project
 EXPOSE 8443
+
+
+
+
 
 #VOLUME /data /home/luser/.config/gcloud /home/luser/.ssh
 VOLUME /data /home/luser/.config/gcloud
