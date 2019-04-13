@@ -11,6 +11,8 @@ RUN dnf -y install python2 \
 #                   libxkbfile-devel \
 #                   libsecret-devel \
                    dumb-init \
+                   net-tools \
+                   procps \
                    && dnf clean all
 
 # environment (DEPRECATED)
