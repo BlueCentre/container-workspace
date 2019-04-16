@@ -4,6 +4,7 @@ MAINTAINER James H Nguyen <james.nguyen@gmail.com>
 # update and install minimal packages
 RUN dnf -y update && dnf clean all
 RUN dnf -y install python2 \
+                   make \
                    git \
                    ansible \
                    sudo \
