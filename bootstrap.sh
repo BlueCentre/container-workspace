@@ -1,5 +1,6 @@
 # aliases for bootstrapping docker workspace
 
+# TODO: switch over to Makefile approach
 # Demonstrates use of ansible site, environment and tags
 alias jn-workspace='/data/gitlab/home/ansible/workspace.sh'
 alias jn-workspace-minimal='/data/gitlab/home/ansible/workspace.sh --tags=workspace.bootstrap.minimal'
