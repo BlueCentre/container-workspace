@@ -17,16 +17,6 @@ RUN dnf -y install python2 \
 
 
 
-# add a local shell user and allow it to sudo without password
-RUN useradd -m luser && \
-    echo 'luser ALL=NOPASSWD: ALL' > /etc/sudoers.d/luser
-
-# switch to user
-USER luser
-ENV HOME /home/luser
-ENV PATH /home/luser/google-cloud-sdk/bin:${PATH}
-ENV CLOUDSDK_PYTHON /usr/bin/python
-
 # custom aliases to bootstrap workspace
 COPY bootstrap.sh /etc/profile.d/
 
@@ -34,28 +24,87 @@ COPY bootstrap.sh /etc/profile.d/
 
 
 
-# install gcloud
+# add a local shell user and allow it to sudo without password
+ENV LOCAL_USER luser
+RUN useradd -m ${LOCAL_USER} && \
+    echo "${LOCAL_USER} ALL=NOPASSWD: ALL" > /etc/sudoers.d/${LOCAL_USER}
+# switch to user
+USER ${LOCAL_USER}
+ENV HOME /home/${LOCAL_USER}
+
+
+
+
+# setup & install gcloud
+ENV PATH /home/${LOCAL_USER}/google-cloud-sdk/bin:${PATH}
+ENV CLOUDSDK_PYTHON /usr/bin/python
+
 RUN curl --silent -o /tmp/google-cloud-sdk.tar.gz \
-    https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
-    && tar -C /home/luser -zxf /tmp/google-cloud-sdk.tar.gz \
-    && /home/luser/google-cloud-sdk/install.sh \
-        --usage-reporting false \
-        --bash-completion true \
-        --rc-path /home/luser/.bashrc \
-        --path-update true \
-    && rm -rf /tmp/google-cloud-sdk.tar.gz
+        https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
+        && tar -C /home/${LOCAL_USER} -zxf /tmp/google-cloud-sdk.tar.gz \
+        && /home/${LOCAL_USER}/google-cloud-sdk/install.sh \
+            --usage-reporting false \
+            --bash-completion true \
+            --rc-path /home/${LOCAL_USER}/.bashrc \
+            --path-update true \
+        && rm -rf /tmp/google-cloud-sdk.tar.gz \
+        && rm -rf /home/${LOCAL_USER}/google-cloud-sdk/.install/.backup
+
+
+
+
+ENV KUBECTL_VERSION 1.14.1
+RUN curl -L -o kubectl \
+        https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
+        && chmod 0755 kubectl \
+        && mv kubectl /usr/bin
+
+ENV HELM_VERSION 2.13.1
+RUN curl -L -o helm.tar.gz \
+        https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
+        && tar -xvzf helm.tar.gz \
+        && rm -rf helm.tar.gz \
+        && chmod 0755 linux-amd64/helm \
+        && mv linux-amd64/helm /usr/bin
+
+ENV TERRAFORM_VERSION 0.11.12
+RUN curl -o ./terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
+        && unzip terraform.zip \
+        && mv terraform /usr/bin \
+        && rm -rf terraform.zip
+
+ENV TERRAGRUNT_VERSION 0.18.3
+RUN curl -L -o ./terragrunt \
+        https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 \
+        && chmod 0755 terragrunt \
+        && mv terragrunt /usr/bin
+
+#ENV TERRAFORM_PROVIDER_HELM_VERSION 0.7.0
+#RUN curl -L -o ./tph.tar.gz \
+#        https://github.com/gpii-ops/terraform-provider-helm/releases/download/v${TERRAFORM_PROVIDER_HELM_VERSION}/terraform-provider-helm_v${TERRAFORM_PROVIDER_HELM_VERSION}_linux_amd64.tar.gz \
+#        && tar -xvzf tph.tar.gz \
+#        && rm -rf tph.tar.gz \
+#        && cd terraform-provider-helm_linux_amd64 \
+#        && chmod 0755 terraform-provider-helm_v${TERRAFORM_PROVIDER_HELM_VERSION} \
+#        && mkdir -p /root/.terraform.d/plugins/ \
+#        && mv terraform-provider-helm_v${TERRAFORM_PROVIDER_HELM_VERSION} /root/.terraform.d/plugins/
+
+#ENV HELMFILE_VERSION 0.54.2
+#RUN curl -L -o helmfile \
+#        https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64 \
+#        && chmod 0755 helmfile \
+#        && mv helmfile /usr/bin
 
 
 
 
 
-
-# todo: download code-server from somewhere
+# todo: download code-server from somewhere remote
 # https://github.com/codercom/code-server/blob/master/Dockerfile
 COPY code-server /usr/local/bin/
 # We create first instead of just using WORKDIR as when WORKDIR creates, the user is root.
-RUN mkdir -p /home/luser/project
-WORKDIR /home/luser/project
+RUN mkdir -p /home/${LOCAL_USER}/project
+WORKDIR /home/${LOCAL_USER}/project
 EXPOSE 8443
 
 
@@ -63,7 +112,7 @@ EXPOSE 8443
 
 
 #VOLUME /data /home/luser/.config/gcloud /home/luser/.ssh
-VOLUME /data /home/luser/.config/gcloud
+VOLUME /data /home/${LOCAL_USER/.config/gcloud
 
 #CMD sleep infinity
 ENTRYPOINT ["dumb-init", "code-server"]
