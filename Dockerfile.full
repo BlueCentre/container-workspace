@@ -115,7 +115,7 @@ EXPOSE 8443
 
 
 #VOLUME /data /home/luser/.config/gcloud /home/luser/.ssh
-VOLUME /data /home/${LOCAL_USER/.config/gcloud
+VOLUME /data /home/${LOCAL_USER}/.config/gcloud
 
 #CMD sleep infinity
 ENTRYPOINT ["dumb-init", "code-server"]
