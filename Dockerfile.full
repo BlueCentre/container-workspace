@@ -24,35 +24,7 @@ COPY bootstrap.sh /etc/profile.d/
 
 
 
-# add a local shell user and allow it to sudo without password
-ENV LOCAL_USER luser
-RUN useradd -m ${LOCAL_USER} && \
-    echo "${LOCAL_USER} ALL=NOPASSWD: ALL" > /etc/sudoers.d/${LOCAL_USER}
-# switch to user
-USER ${LOCAL_USER}
-ENV HOME /home/${LOCAL_USER}
-
-
-
-
-# setup & install gcloud
-ENV PATH /home/${LOCAL_USER}/google-cloud-sdk/bin:${PATH}
-ENV CLOUDSDK_PYTHON /usr/bin/python
-
-RUN curl --silent -o /tmp/google-cloud-sdk.tar.gz \
-        https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
-        && tar -C /home/${LOCAL_USER} -zxf /tmp/google-cloud-sdk.tar.gz \
-        && /home/${LOCAL_USER}/google-cloud-sdk/install.sh \
-            --usage-reporting false \
-            --bash-completion true \
-            --rc-path /home/${LOCAL_USER}/.bashrc \
-            --path-update true \
-        && rm -rf /tmp/google-cloud-sdk.tar.gz \
-        && rm -rf /home/${LOCAL_USER}/google-cloud-sdk/.install/.backup
-
-
-
-
+# install these tools before switching to local user
 ENV KUBECTL_VERSION 1.14.1
 RUN curl -L -o kubectl \
         https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
@@ -94,6 +66,36 @@ RUN curl -L -o ./terragrunt \
 #        https://github.com/roboll/helmfile/releases/download/v${HELMFILE_VERSION}/helmfile_linux_amd64 \
 #        && chmod 0755 helmfile \
 #        && mv helmfile /usr/bin
+
+
+
+
+
+# add a local shell user and allow it to sudo without password
+ENV LOCAL_USER luser
+RUN useradd -m ${LOCAL_USER} && \
+    echo "${LOCAL_USER} ALL=NOPASSWD: ALL" > /etc/sudoers.d/${LOCAL_USER}
+# switch to user
+USER ${LOCAL_USER}
+ENV HOME /home/${LOCAL_USER}
+
+
+
+
+# setup & install gcloud
+ENV PATH /home/${LOCAL_USER}/google-cloud-sdk/bin:${PATH}
+ENV CLOUDSDK_PYTHON /usr/bin/python
+
+RUN curl --silent -o /tmp/google-cloud-sdk.tar.gz \
+        https://dl.google.com/dl/cloudsdk/release/google-cloud-sdk.tar.gz \
+        && tar -C /home/${LOCAL_USER} -zxf /tmp/google-cloud-sdk.tar.gz \
+        && /home/${LOCAL_USER}/google-cloud-sdk/install.sh \
+            --usage-reporting false \
+            --bash-completion true \
+            --rc-path /home/${LOCAL_USER}/.bashrc \
+            --path-update true \
+        && rm -rf /tmp/google-cloud-sdk.tar.gz \
+        && rm -rf /home/${LOCAL_USER}/google-cloud-sdk/.install/.backup
 
 
 
