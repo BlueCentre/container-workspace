@@ -38,19 +38,19 @@ RUN curl --silent -L -o helm.tar.gz \
         && tar -xvzf helm.tar.gz \
         && rm -rf helm.tar.gz \
         && chmod 0755 linux-amd64/helm \
-        && mv linux-amd64/helm /usr/bin
+        && mv linux-amd64/helm /usr/local/bin
 
 ENV TERRAFORM_VERSION 0.11.13
 RUN curl --silent -o ./terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
         && unzip terraform.zip \
-        && mv terraform /usr/bin \
+        && mv terraform /usr/local/bin \
         && rm -rf terraform.zip
 
 ENV TERRAGRUNT_VERSION 0.18.3
 RUN curl --silent -L -o ./terragrunt \
         https://github.com/gruntwork-io/terragrunt/releases/download/v${TERRAGRUNT_VERSION}/terragrunt_linux_amd64 \
         && chmod 0755 terragrunt \
-        && mv terragrunt /usr/bin
+        && mv terragrunt /usr/local/bin
 
 #ENV TERRAFORM_PROVIDER_HELM_VERSION 0.7.0
 #RUN curl -L -o ./tph.tar.gz \
@@ -97,6 +97,13 @@ RUN curl --silent -o /tmp/google-cloud-sdk.tar.gz \
             --path-update true \
         && rm -rf /tmp/google-cloud-sdk.tar.gz \
         && rm -rf /home/${LOCAL_USER}/google-cloud-sdk/.install/.backup
+
+
+
+
+
+# setup helm client and tiller plugin as local user
+RUN helm init --client-only && helm plugin install https://github.com/rimusz/helm-tiller
 
 
 
