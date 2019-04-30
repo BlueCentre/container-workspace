@@ -26,19 +26,22 @@ COPY bootstrap.sh /etc/profile.d/
 
 
 # install these tools before switching to local user
-ENV KUBECTL_VERSION 1.14.1
-RUN curl --silent -L -o kubectl \
-        https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
-        && chmod 0755 kubectl \
-        && mv kubectl /usr/bin
+#ENV KUBECTL_VERSION 1.14.1
+#RUN curl --silent -L -o kubectl \
+#        https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl \
+#        && chmod 0755 kubectl \
+#        && mv kubectl /usr/bin
+RUN curl -sL "https://storage.googleapis.com/kubernetes-release/release/$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl" -o /usr/bin/kubectl && \
+    chmod 0755 /usr/bin/kubectl
 
-ENV HELM_VERSION 2.13.1
-RUN curl --silent -L -o helm.tar.gz \
-        https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
-        && tar -xvzf helm.tar.gz \
-        && rm -rf helm.tar.gz \
-        && chmod 0755 linux-amd64/helm \
-        && mv linux-amd64/helm /usr/local/bin
+#ENV HELM_VERSION 2.13.1
+#RUN curl --silent -L -o helm.tar.gz \
+#        https://storage.googleapis.com/kubernetes-helm/helm-v${HELM_VERSION}-linux-amd64.tar.gz \
+#        && tar -xvzf helm.tar.gz \
+#        && rm -rf helm.tar.gz \
+#        && chmod 0755 linux-amd64/helm \
+#        && mv linux-amd64/helm /usr/local/bin
+RUN curl "https://raw.githubusercontent.com/helm/helm/master/scripts/get" | bash
 
 ENV TERRAFORM_VERSION 0.11.13
 RUN curl --silent -o ./terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
@@ -103,7 +106,8 @@ RUN curl --silent -o /tmp/google-cloud-sdk.tar.gz \
 
 
 # setup helm client and tiller plugin as local user
-RUN helm init --client-only && helm plugin install https://github.com/rimusz/helm-tiller
+RUN helm init --client-only && \
+    helm plugin install https://github.com/rimusz/helm-tiller
 
 
 
@@ -111,11 +115,18 @@ RUN helm init --client-only && helm plugin install https://github.com/rimusz/hel
 
 # todo: download code-server from somewhere remote
 # https://github.com/codercom/code-server/blob/master/Dockerfile
-COPY code-server /usr/local/bin/
-# We create first instead of just using WORKDIR as when WORKDIR creates, the user is root.
+#COPY code-server /usr/local/bin/
+# install code-server
+ENV CODE_VERSION="1.939-vsc1.33.1"
+RUN curl -sL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/code-server${CODE_VERSION}-linux-x64.tar.gz | tar --strip-components=1 -zx -C /usr/local/bin code-server${CODE_VERSION}-linux-x64/code-server
+
+
+
+
+
+# setup local user workspace
 RUN mkdir -p /home/${LOCAL_USER}/project
 WORKDIR /home/${LOCAL_USER}/project
-EXPOSE 8443
 
 
 
@@ -124,5 +135,7 @@ EXPOSE 8443
 #VOLUME /data /home/luser/.config/gcloud /home/luser/.ssh
 VOLUME /data /home/${LOCAL_USER}/.config/gcloud
 
-#CMD sleep infinity
+# code-server will listen on 8443 by default when it starts
+EXPOSE 8443
 ENTRYPOINT ["dumb-init", "code-server"]
+#CMD sleep infinity
