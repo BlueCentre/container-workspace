@@ -75,6 +75,13 @@ RUN curl --silent -L -o ./terragrunt \
 
 
 
+# https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc
+RUN echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
+
+
+
+
+
 # add a local shell user and allow it to sudo without password
 ENV LOCAL_USER luser
 RUN useradd -m ${LOCAL_USER} && \
