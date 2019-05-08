@@ -41,7 +41,7 @@ RUN curl -sL "https://storage.googleapis.com/kubernetes-release/release/$(curl -
 #        && rm -rf helm.tar.gz \
 #        && chmod 0755 linux-amd64/helm \
 #        && mv linux-amd64/helm /usr/local/bin
-RUN curl "https://raw.githubusercontent.com/helm/helm/master/scripts/get" | bash
+RUN curl --silent "https://raw.githubusercontent.com/helm/helm/master/scripts/get" | bash
 
 ENV TERRAFORM_VERSION 0.11.13
 RUN curl --silent -o ./terraform.zip https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip \
@@ -74,6 +74,10 @@ RUN curl --silent -L -o ./terragrunt \
 
 
 
+
+# install code-server
+ENV CODE_VERSION="1.939-vsc1.33.1"
+RUN curl -sL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/code-server${CODE_VERSION}-linux-x64.tar.gz | tar --strip-components=1 -zx -C /usr/local/bin code-server${CODE_VERSION}-linux-x64/code-server
 
 # https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc
 RUN echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
@@ -115,17 +119,6 @@ RUN curl --silent -o /tmp/google-cloud-sdk.tar.gz \
 # setup helm client and tiller plugin as local user
 RUN helm init --client-only && \
     helm plugin install https://github.com/rimusz/helm-tiller
-
-
-
-
-
-# todo: download code-server from somewhere remote
-# https://github.com/codercom/code-server/blob/master/Dockerfile
-#COPY code-server /usr/local/bin/
-# install code-server
-ENV CODE_VERSION="1.939-vsc1.33.1"
-RUN curl -sL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/code-server${CODE_VERSION}-linux-x64.tar.gz | tar --strip-components=1 -zx -C /usr/local/bin code-server${CODE_VERSION}-linux-x64/code-server
 
 
 
