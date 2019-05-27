@@ -4,6 +4,7 @@ MAINTAINER James H Nguyen <james.nguyen@gmail.com>
 # update and install minimal packages
 RUN dnf -y update && dnf clean all
 RUN dnf -y install python2 \
+                   python3-virtualenv \
                    make \
                    git \
                    ansible \
@@ -79,8 +80,9 @@ RUN curl --silent -L -o ./terragrunt \
 ENV CODE_VERSION="1.939-vsc1.33.1"
 RUN curl -sL https://github.com/codercom/code-server/releases/download/${CODE_VERSION}/code-server${CODE_VERSION}-linux-x64.tar.gz | tar --strip-components=1 -zx -C /usr/local/bin code-server${CODE_VERSION}-linux-x64/code-server
 
+# NOTE: this needs to be set on the k8s nodes since it does nothing inside a container
 # https://code.visualstudio.com/docs/setup/linux#_visual-studio-code-is-unable-to-watch-for-file-changes-in-this-large-workspace-error-enospc
-RUN echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
+#RUN echo "fs.inotify.max_user_watches=524288" >> /etc/sysctl.conf
 
 
 
